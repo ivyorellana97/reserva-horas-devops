@@ -8,6 +8,9 @@ Servicio web estático de reserva de horas médicas para un centro de salud fict
 
 ```
 reserva-horas-devops/
+├── .github/
+│   └── workflows/
+│       └── devops-automation.yml
 ├── src/
 │   ├── index.html
 │   └── styles.css
@@ -78,6 +81,18 @@ docker compose down
 - No se publican tokens, claves, certificados ni datos personales.
 - Nginx oculta su versión (`server_tokens off`) y agrega cabeceras de seguridad básicas.
 - Antes de cada commit se revisan los cambios con `git status` y `git diff`.
+
+## Automatización con GitHub Actions
+
+Cada push y pull request ejecuta el flujo `devops-automation.yml`, que:
+
+1. Verifica que existan los archivos obligatorios del proyecto.
+2. Comprueba que el archivo `.env` no esté versionado.
+3. Busca posibles credenciales expuestas.
+4. Construye la imagen Docker, levanta el contenedor y prueba la página y `/health`.
+5. Muestra los logs y elimina el contenedor de prueba.
+
+El resultado se puede revisar en la pestaña **Actions** del repositorio.
 
 ## Flujo de trabajo
 

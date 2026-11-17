@@ -1,0 +1,71 @@
+name: DevOps Automation
+
+on:
+  push:
+    branches: [main, "feature/**", "fix/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validar:
+    name: Validar repositorio
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Verificar archivos obligatorios
+        run: |
+          for archivo in src/index.html src/styles.css Dockerfile docker-compose.yml .gitignore .env.example README.md; do
+            if [ -f "$archivo" ]; then
+              echo "OK: $archivo"
+            else
+              echo "Falta: $archivo"
+              exit 1
+            fi
+          done
+
+      - name: Verificar que no se publique .env
+        run: |
+          if git ls-files --error-unmatch .env > /dev/null 2>&1; then
+            echo "Error: el archivo .env no debe estar en el repositorio"
+            exit 1
+          fi
+          echo "OK: .env no está versionado"
+
+      - name: Buscar posibles credenciales
+        run: |
+          if grep -rInE "(ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN (RSA|OPENSSH|EC) PRIVATE KEY-----)" --exclude-dir=.git .; then
+            echo "Se encontraron posibles credenciales"
+            exit 1
+          fi
+          echo "OK: no se encontraron credenciales"
+
+  construir:
+    name: Construir y probar contenedor
+    runs-on: ubuntu-latest
+    needs: validar
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Construir imagen
+        run: docker build -t reserva-horas-web:ci .
+
+      - name: Levantar contenedor
+        run: docker run -d --name reserva-ci -p 8080:80 reserva-horas-web:ci
+
+      - name: Probar servicio
+        run: |
+          sleep 3
+          curl -fsS http://localhost:8080/ > /dev/null
+          curl -fsS http://localhost:8080/health
+          echo "Servicio respondiendo correctamente"
+
+      - name: Revisar logs
+        if: always()
+        run: docker logs reserva-ci
+
+      - name: Detener contenedor
+        if: always()
+        run: docker rm -f reserva-ci
