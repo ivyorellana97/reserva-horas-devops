@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Reserva tu hora médica en línea en Centro Médico Vitalia.">
+  <title>Centro Médico Vitalia | Reserva de horas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="contenedor nav-interna">
+      <a href="#inicio" class="logo">
+        <span class="logo-icono">+</span>
+        <span>Vitalia<small>Centro Médico</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="#reserva">Reservar</a>
+        <a href="#atencion">Atención</a>
+        <a href="#estado">Estado</a>
+      </div>
+      <a href="#reserva" class="btn btn-nav">Reservar hora</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="inicio">
+    <div class="burbuja b1"></div>
+    <div class="burbuja b2"></div>
+    <div class="burbuja b3"></div>
+    <div class="contenedor hero-grid">
+      <div class="hero-texto aparecer">
+        <span class="etiqueta">Atención de lunes a sábado</span>
+        <h1>Tu salud, a un clic de distancia</h1>
+        <p>Reserva tu hora médica en menos de un minuto. Elige especialidad, día y hora, y recibe la confirmación al instante.</p>
+        <div class="hero-acciones">
+          <a href="#reserva" class="btn btn-blanco">Reservar ahora</a>
+          <a href="#atencion" class="btn btn-borde">Ver horarios</a>
+        </div>
+        <div class="hero-datos">
+          <div><strong>+25</strong><span>especialistas</span></div>
+          <div><strong>6</strong><span>especialidades</span></div>
+          <div><strong>4.9</strong><span>valoración pacientes</span></div>
+        </div>
+      </div>
+      <div class="hero-tarjeta aparecer">
+        <div class="pulso-titulo">
+          <span class="corazon">&#10084;</span>
+          <span>Monitor Vitalia</span>
+        </div>
+        <svg class="ecg" viewBox="0 0 300 80" preserveAspectRatio="none">
+          <polyline points="0,40 60,40 75,40 85,15 95,65 105,30 115,40 170,40 180,40 190,10 200,70 210,35 220,40 300,40" />
+        </svg>
+        <div class="mini-cita">
+          <span class="mini-icono">&#128197;</span>
+          <div>
+            <strong>Próxima hora disponible</strong>
+            <span id="proxima-hora">Hoy, 15:00 hrs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="seccion" id="reserva">
+      <div class="contenedor">
+        <div class="titulo-seccion aparecer">
+          <span class="etiqueta etiqueta-color">Reserva en línea</span>
+          <h2>Agenda tu hora en 3 pasos</h2>
+        </div>
+
+        <div class="reserva-grid">
+          <form id="form-reserva" class="tarjeta reserva aparecer" novalidate>
+            <div class="paso">
+              <div class="paso-titulo"><span class="paso-num">1</span>Elige la especialidad</div>
+              <div class="especialidades" id="especialidades">
+                <button type="button" class="esp" data-valor="Medicina general"><span class="esp-icono g1">&#129658;</span>Medicina general</button>
+                <button type="button" class="esp" data-valor="Pediatría"><span class="esp-icono g2">&#128118;</span>Pediatría</button>
+                <button type="button" class="esp" data-valor="Cardiología"><span class="esp-icono g3">&#10084;&#65039;</span>Cardiología</button>
+                <button type="button" class="esp" data-valor="Traumatología"><span class="esp-icono g4">&#129460;</span>Traumatología</button>
+                <button type="button" class="esp" data-valor="Dermatología"><span class="esp-icono g5">&#10024;</span>Dermatología</button>
+                <button type="button" class="esp" data-valor="Ginecología"><span class="esp-icono g6">&#127800;</span>Ginecología</button>
+              </div>
+            </div>
+
+            <div class="paso">
+              <div class="paso-titulo"><span class="paso-num">2</span>Selecciona día y hora</div>
+              <div class="dias" id="dias"></div>
+              <div class="horas" id="horas"></div>
+            </div>
+
+            <div class="paso">
+              <div class="paso-titulo"><span class="paso-num">3</span>Datos del paciente</div>
+              <div class="campos">
+                <div class="campo">
+                  <input type="text" id="nombre" placeholder=" " required>
+                  <label for="nombre">Nombre completo</label>
+                </div>
+                <div class="campo">
+                  <input type="text" id="rut" placeholder=" " required>
+                  <label for="rut">RUT</label>
+                </div>
+                <div class="campo">
+                  <input type="email" id="correo" placeholder=" " required>
+                  <label for="correo">Correo electrónico</label>
+                </div>
+                <div class="campo">
+                  <select id="prevision">
+                    <option>Fonasa</option>
+                    <option>Isapre</option>
+                    <option>Particular</option>
+                  </select>
+                  <label for="prevision" class="fija">Previsión</label>
+                </div>
+              </div>
+            </div>
+
+            <p class="error" id="error" hidden></p>
+            <button type="submit" class="btn btn-principal">Confirmar reserva</button>
+            <p class="aviso">Sitio de demostración: los datos ingresados no se envían ni se almacenan.</p>
+          </form>
+
+          <aside class="resumen tarjeta aparecer">
+            <h3>Tu reserva</h3>
+            <ul>
+              <li><span>Especialidad</span><strong id="r-esp">Sin seleccionar</strong></li>
+              <li><span>Día</span><strong id="r-dia">Sin seleccionar</strong></li>
+              <li><span>Hora</span><strong id="r-hora">Sin seleccionar</strong></li>
+              <li><span>Modalidad</span><strong>Presencial</strong></li>
+            </ul>
+            <div class="progreso"><div class="progreso-barra" id="progreso"></div></div>
+            <p class="progreso-texto" id="progreso-texto">0 de 3 pasos completados</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion seccion-suave" id="atencion">
+      <div class="contenedor">
+        <div class="titulo-seccion aparecer">
+          <span class="etiqueta etiqueta-color">Información</span>
+          <h2>Datos de atención</h2>
+        </div>
+        <div class="info-grid">
+          <div class="tarjeta info aparecer">
+            <span class="info-icono g1">&#128336;</span>
+            <h3>Horario</h3>
+            <p>Lunes a viernes<br><strong>08:00 a 20:00 hrs.</strong></p>
+            <p>Sábados<br><strong>09:00 a 14:00 hrs.</strong></p>
+          </div>
+          <div class="tarjeta info aparecer">
+            <span class="info-icono g3">&#128205;</span>
+            <h3>Ubicación</h3>
+            <p>Av. Ejemplo 1234, Santiago</p>
+            <p>A pasos del metro, con estacionamiento para pacientes.</p>
+          </div>
+          <div class="tarjeta info aparecer">
+            <span class="info-icono g2">&#128222;</span>
+            <h3>Contacto</h3>
+            <p>+56 2 2000 0000</p>
+            <p>contacto@vitalia.example</p>
+          </div>
+          <div class="tarjeta info aparecer">
+            <span class="info-icono g5">&#128203;</span>
+            <h3>Recomendaciones</h3>
+            <p>Llega 15 minutos antes con tu cédula de identidad y, si tienes, tus exámenes anteriores.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="estado">
+      <div class="contenedor">
+        <div class="estado tarjeta aparecer">
+          <div class="estado-cabecera">
+            <span class="punto-vivo"></span>
+            <div>
+              <h3>Estado del servicio</h3>
+              <p class="estado-ok">Todos los sistemas operativos</p>
+            </div>
+          </div>
+          <div class="estado-grid">
+            <div><span>Versión</span><strong>1.0.0</strong></div>
+            <div><span>Entorno</span><strong>Local · Docker Desktop</strong></div>
+            <div><span>Servidor</span><strong>Nginx (alpine)</strong></div>
+            <div><span>Puerto</span><strong>8080</strong></div>
+            <div><span>Health check</span><strong><a href="/health">/health</a></strong></div>
+            <div><span>Actualizado</span><strong id="hora-actual">--:--</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <p><strong>Centro Médico Vitalia</strong> · Proyecto académico DevOps · 2026</p>
+      <p class="pie-sub">Centro médico ficticio creado con fines educativos.</p>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-caja">
+      <svg class="check" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="24" />
+        <path d="M14 27 l8 8 l16 -16" />
+      </svg>
+      <h3>¡Reserva confirmada!</h3>
+      <p id="modal-texto"></p>
+      <p class="codigo">Código de reserva: <strong id="modal-codigo"></strong></p>
+      <button type="button" class="btn btn-principal" id="cerrar-modal">Entendido</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var estado = { especialidad: "", dia: "", hora: "" };
+      var nombresDia = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+      var nombresMes = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+      var horasBase = ["08:30", "09:15", "10:00", "10:45", "11:30", "12:15", "15:00", "15:45", "16:30", "17:15"];
+
+      function actualizarResumen() {
+        document.getElementById("r-esp").textContent = estado.especialidad || "Sin seleccionar";
+        document.getElementById("r-dia").textContent = estado.dia || "Sin seleccionar";
+        document.getElementById("r-hora").textContent = estado.hora ? estado.hora + " hrs." : "Sin seleccionar";
+        var nombre = document.getElementById("nombre").value.trim();
+        var pasos = (estado.especialidad ? 1 : 0) + (estado.dia && estado.hora ? 1 : 0) + (nombre ? 1 : 0);
+        document.getElementById("progreso").style.width = (pasos / 3 * 100) + "%";
+        document.getElementById("progreso-texto").textContent = pasos + " de 3 pasos completados";
+      }
+
+      function marcar(contenedor, boton) {
+        contenedor.querySelectorAll(".activo").forEach(function (b) { b.classList.remove("activo"); });
+        boton.classList.add("activo");
+      }
+
+      var especialidades = document.getElementById("especialidades");
+      especialidades.addEventListener("click", function (e) {
+        var boton = e.target.closest(".esp");
+        if (!boton) return;
+        marcar(especialidades, boton);
+        estado.especialidad = boton.dataset.valor;
+        actualizarResumen();
+      });
+
+      var dias = document.getElementById("dias");
+      var horas = document.getElementById("horas");
+      var hoy = new Date();
+      var agregados = 0;
+      for (var i = 0; agregados < 7; i++) {
+        var fecha = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + i);
+        if (fecha.getDay() === 0) continue;
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "dia";
+        b.dataset.semilla = fecha.getDate();
+        b.dataset.valor = nombresDia[fecha.getDay()] + " " + fecha.getDate() + " " + nombresMes[fecha.getMonth()];
+        b.innerHTML = "<span>" + nombresDia[fecha.getDay()] + "</span><strong>" + fecha.getDate() + "</strong><small>" + nombresMes[fecha.getMonth()] + "</small>";
+        dias.appendChild(b);
+        agregados++;
+      }
+
+      function mostrarHoras(semilla) {
+        horas.innerHTML = "";
+        horasBase.forEach(function (h, idx) {
+          var hb = document.createElement("button");
+          hb.type = "button";
+          hb.className = "hora";
+          hb.textContent = h;
+          if ((idx + Number(semilla)) % 4 === 0) {
+            hb.disabled = true;
+            hb.title = "Hora no disponible";
+          }
+          hb.style.animationDelay = (idx * 0.04) + "s";
+          horas.appendChild(hb);
+        });
+      }
+
+      dias.addEventListener("click", function (e) {
+        var boton = e.target.closest(".dia");
+        if (!boton) return;
+        marcar(dias, boton);
+        estado.dia = boton.dataset.valor;
+        estado.hora = "";
+        mostrarHoras(boton.dataset.semilla);
+        actualizarResumen();
+      });
+
+      horas.addEventListener("click", function (e) {
+        var boton = e.target.closest(".hora");
+        if (!boton || boton.disabled) return;
+        marcar(horas, boton);
+        estado.hora = boton.textContent;
+        actualizarResumen();
+      });
+
+      document.getElementById("nombre").addEventListener("input", actualizarResumen);
+
+      var form = document.getElementById("form-reserva");
+      var error = document.getElementById("error");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var faltantes = [];
+        if (!estado.especialidad) faltantes.push("especialidad");
+        if (!estado.dia || !estado.hora) faltantes.push("día y hora");
+        ["nombre", "rut", "correo"].forEach(function (id) {
+          var campo = document.getElementById(id);
+          if (!campo.value.trim() || !campo.checkValidity()) faltantes.push(campo.nextElementSibling.textContent.toLowerCase());
+        });
+        if (faltantes.length) {
+          error.textContent = "Falta completar: " + faltantes.join(", ") + ".";
+          error.hidden = false;
+          return;
+        }
+        error.hidden = true;
+        var codigo = "VT-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+        document.getElementById("modal-texto").textContent = estado.especialidad + " · " + estado.dia + " a las " + estado.hora + " hrs.";
+        document.getElementById("modal-codigo").textContent = codigo;
+        document.getElementById("modal").hidden = false;
+      });
+
+      document.getElementById("cerrar-modal").addEventListener("click", function () {
+        document.getElementById("modal").hidden = true;
+        form.reset();
+        estado = { especialidad: "", dia: "", hora: "" };
+        document.querySelectorAll(".activo").forEach(function (b) { b.classList.remove("activo"); });
+        horas.innerHTML = "";
+        actualizarResumen();
+      });
+
+      var observador = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (entrada) {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add("visible");
+            observador.unobserve(entrada.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".aparecer").forEach(function (el) { observador.observe(el); });
+
+      var ahora = new Date();
+      document.getElementById("hora-actual").textContent = ahora.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" });
+    })();
+  </script>
+</body>
+</html>
